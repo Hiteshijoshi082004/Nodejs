@@ -7,4 +7,4 @@ const BrandSchema = mongoose.Schema({
     created_At:{type:Date, deafult:Date.now()}
 })
 
-module.exports = mongoose.model("BrandModel", BrandSchemaSchema)
+module.exports = mongoose.model("BrandModel", BrandSchema)

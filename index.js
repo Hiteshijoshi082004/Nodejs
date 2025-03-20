@@ -1,7 +1,7 @@
 // console.log("helloxjasjskdsx21323")
 const express = require("express")
 const app = express()
-const PORT = 5001
+const PORT = 5002
 // database connectivity 
 const db = require("./Server/config/db")
 app.use(express.urlencoded({extended:true}))

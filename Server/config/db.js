@@ -1,8 +1,9 @@
 const mongoose=require("mongoose")
+
 mongoose.connect("mongodb://localhost:27017/clothes")
 .then(()=>{
-    console.log("Database is connected!!"); 
+    console.log("Db is connected!!"); 
 })
 .catch((error)=>{
-    console.log("Error while connecting database", error); 
+    console.log("Error while connect DB", error); 
 })
