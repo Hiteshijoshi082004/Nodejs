@@ -1,9 +1,9 @@
 
 add=(req,res)=>{
     console.log(req.body)
+    let BrandObj = new BrandModel();
     BrandObj.name = req.body.name
     BrandObj.description = req.body.description
-    let BrandObj = new BrandModel();
     BrandObj.save();
 
 }

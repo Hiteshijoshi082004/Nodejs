@@ -1,9 +1,9 @@
 const ProductModel = require("./ProductModel")
 add=(req,res)=>{
    console.log(req.body);
+   let ProductObj = new ProductModel();
    ProductObj.name = req.body.name
    ProductObj.description = req.body.description
-   let ProductObj = new ProductModel();
    ProductObj.save()
 }
 
