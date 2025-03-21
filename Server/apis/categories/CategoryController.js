@@ -1,9 +1,9 @@
 const CategoryModel = require("./CategoryModel")
 add=(req,res)=>{
    console.log(req.body);
-   CategoryObj.name = req.body.name
-   CategoryObj.description = req.body.description
    let CategoryObj = new CategoryModel();
+   CategoryObj.name = req.body.name;
+   CategoryObj.description = req.body.description;
    CategoryObj.save()
 }
 

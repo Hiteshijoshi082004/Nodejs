@@ -8,7 +8,7 @@ app.use(express.urlencoded({extended:true}))
 app.use(express.json({limit:"40mb"}))
 // controller router check 
 const api=require("./server/routes/ApiRoutes")
-app.use("/api", api)
+app.use("/apis", api)
 app.listen(PORT,()=>{
     console.log("SERVER is running at PORT", PORT);
 })
