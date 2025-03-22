@@ -1,12 +1,16 @@
 // console.log("helloxjasjskdsx21323")
+// EXPRESS SETUP 
 const express = require("express")
+
 const app = express()
+
 const PORT = 5002
-// database connectivity 
+
+// DATABASE CONNECTIVITY
 const db = require("./Server/config/db")
 app.use(express.urlencoded({extended:true}))
 app.use(express.json({limit:"40mb"}))
-// controller router check 
+// CONTROLLER ROUTER CHECK  
 const api=require("./server/routes/ApiRoutes")
 app.use("/apis", api)
 app.listen(PORT,()=>{
