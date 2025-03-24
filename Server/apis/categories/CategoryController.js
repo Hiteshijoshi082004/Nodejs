@@ -1,9 +1,25 @@
 const CategoryModel = require("./CategoryModel")
 add= async(req,res)=>{
-   console.log(req.body);
+   let validation =""
+   let formData = req.body
+   if(!formData.name){
+    validation+=" Name is required, " 
+   }
+   if(!formData.description){
+    validation+=" description is required"
+   }
+   if(!!validation){
+    res.json({
+        status:422,
+        success:false,
+        message: validation
+    })
+   }
+   else{
+    console.log(req.body);
    let CategoryObj = new CategoryModel();
    let total=await CategoryModel.countDocuments().exec();
-   CategoryObj.autoId = total + 1;
+   CategoryObj.autoID = total + 1;
    CategoryObj.name = req.body.name;
    CategoryObj.description = req.body.description;
    CategoryObj.save()
@@ -23,6 +39,7 @@ add= async(req,res)=>{
         error:err
     })
 })
+   }
 }
 
 all=(req,res)=>{

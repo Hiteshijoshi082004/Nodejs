@@ -1,9 +1,25 @@
 const BrandModel = require("./BrandModel")
 add= async(req,res)=>{
+   let validation = ""
+   let formData =req.body
+   if(!formData.name){
+    validation +=" Name is required, "
+   }
+   if(!formData.description){
+    validation +=" description is required "
+   }
+   if(!!validation){
+    res.json({
+        status: 422,
+        success: false,
+        Message: validation
+    })
+   }
+   else{
     console.log(req.body)
     let BrandObj = new BrandModel();
     let total= await BrandModel.countDocuments().exec()
-    BrandObj.autoId=total+1;
+    BrandObj.autoID=total+1;
     BrandObj.name = req.body.name;
     BrandObj.description = req.body.description;
     BrandObj.save()
@@ -23,6 +39,7 @@ add= async(req,res)=>{
             error:err
         })
     })
+   }
 }
 
 all=(req,res)=>{
