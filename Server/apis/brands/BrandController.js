@@ -43,10 +43,32 @@ add= async(req,res)=>{
 }
 
 all=(req,res)=>{
-    res.json({
-        status:200,
-        success:true,
-        message:"All api is working!!"
-    })
+   BrandModel.find(req.body)
+       .then((brandData)=>{
+           if(brandData.length>0){
+               res.json({
+                   status:200,
+                   success:true,
+                   message:"Brand loaded",
+                   data:brandData
+               })
+           }else{
+               res.json({
+                   status:404,
+                   success:false,
+                   message:"category not found!!"
+               })
+          }
+          
+           
+       })
+       .catch((err)=>{
+           res.json({
+               status:500,
+               success:false,
+               message:"Internal server error",
+               error:err
+           })
+       })
 }
 module.exports={add, all}
