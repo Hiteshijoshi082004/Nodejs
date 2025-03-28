@@ -43,9 +43,18 @@ add= async(req,res)=>{
 }
 
 all=(req,res)=>{
+    let formData = req.body
+    let limit =formData.limit
+    let currentPage = formData.currentPage
+    delete formData.limit 
+    delete formData.currentPage
     CategoryModel.find(req.body)
-    .then((categoryData)=>{
+    .limit(limit)
+    .skip((currentPage-1)*limit)
+    CategoryModel.find(req.body)
+    .then(async(categoryData)=>{
         if(categoryData.length>0){
+            let total = await CategoryModel.countDocuments().exec()
             res.json({
                 status:200,
                 success:true,
