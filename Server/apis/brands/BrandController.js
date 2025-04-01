@@ -43,32 +43,183 @@ add= async(req,res)=>{
 }
 
 all=(req,res)=>{
-   BrandModel.find(req.body)
-       .then((brandData)=>{
-           if(brandData.length>0){
-               res.json({
-                   status:200,
-                   success:true,
-                   message:"Brand loaded",
-                   data:brandData
-               })
-           }else{
-               res.json({
-                   status:404,
-                   success:false,
-                   message:"category not found!!"
-               })
-          }
+  let formData = req.body
+      let limit =formData.limit
+      let currentPage = formData.currentPage
+      delete formData.limit 
+      delete formData.currentPage
+      BrandModel.find(formData)
+      .limit(limit)
+      .skip((currentPage-1)*limit)
+      .then(async(brandData)=>{
+          if(brandData.length>0){
+              let total = await BrandModel.countDocuments().exec()
+              res.json({
+                  status:200,
+                  success:true,
+                  message:"Brand loaded",
+                  data:brandData
+              })
+          }else{
+              res.json({
+                  status:404,
+                  success:false,
+                  message:"Brand not found!!"
+              })
+         }
+         
           
-           
-       })
-       .catch((err)=>{
-           res.json({
-               status:500,
-               success:false,
-               message:"Internal server error",
-               error:err
-           })
-       })
+      })
+      .catch((err)=>{
+          res.json({
+              status:500,
+              success:false,
+              message:"Internal server error",
+              error:err
+          })
+      })
+  }
+
+single=(req,res)=>{
+    let validation=""
+    if(!req.body._id){
+        validation+="_id is required"
+    }
+    if(!!validation){
+        res.json({
+            status:422,
+            success:false,
+            message:validation
+        })
+    }else{
+        BrandModel.findOne({_id:req.body._id})
+        .then((brandData)=>{
+            if(!brandData){
+                res.json({
+                    status:404,
+                    success:false,
+                    message:"No Brand found!!"
+                })
+            }else{
+                res.json({
+                    status:200,
+                    success:true,
+                    message:"Brand Loaded",
+                    data:brandData
+                })
+            }
+            
+        })
+        .catch((err)=>{
+            res.json({
+                status:500,
+                success:false,
+                message:"Internal server error!!"
+            })
+        })
+    }    
 }
-module.exports={add, all}
+
+deleteBrand = (req,res)=>{
+    let validation=""
+    if(!req.body._id){
+        validation=+"id is required"
+    }
+    if(!!validation){
+        res.json({
+            status:422,
+            success:false,
+            message:validation
+        })
+    }
+    else{
+        BrandModel.findOne({_id:req.body._id})
+        .then((brandData)=>{
+            if(!brandData){
+                res.json({
+                    status:404,
+                    success:false,
+                    message:"brand not found"
+                })
+            }
+            else{
+                BrandModel.deleteOne({_id:req.body._id})
+                .then((brandData)=>{
+                        res.json({
+                                status:200,
+                                success:true,
+                                message:"brand is deleted"
+                            })
+                })
+                .catch((err)=>{
+                    res.json({
+                        status:500,
+                        success:false,
+                        message:"Internal Server Error"
+                    })
+                })
+            }
+        })
+    .catch((err)=>{
+        res.json({
+            status:500,
+            success:false,
+            message:"Internal Server Error"
+        })
+    })
+}
+}
+
+
+deleteBrandByParams = (req,res)=>{
+    let validation=""
+    if(!req.params._id){
+        validation+="id is required"
+    }
+    if(!!validation){
+        res.json({
+            status:422,
+            success:false,
+            message:validation
+        })
+    }
+    else{
+        BrandModel.findOne({_id:req.params._id})
+        .then((brandData)=>{
+                if(!brandData){
+                    res.json({
+                        status:404,
+                        success:false,
+                        message:"Brand not found"
+                    })
+                }
+                else{
+                    BrandModel.deleteOne({_id:req.params._id})
+                    .then((brandData)=>{
+                        res.json({
+                            status:200,
+                            success:true,
+                            message:"Brand deleted!!"
+                        })  
+                    })
+                    .catch((err)=>{
+                        res.json({
+                            status:500,
+                            success:false,
+                            message:"Internal Server Error"
+
+                        })
+                    })
+                }
+        })
+        .catch((err)=>{
+            res.json({
+                status:500,
+                success:false,
+                message:"Internal Server Error"
+            })
+        })
+    }
+}
+
+module.exports={add, all, single,deleteBrand, deleteBrandByParams}
