@@ -222,4 +222,119 @@ deleteCategoryByParams = (req,res)=>{
         })
     }
 }
-module.exports={add, all, single,deleteCategory, deleteCategoryByParams}
+
+updateCategory = (req,res)=>{
+   let validation =""
+   let formData = req.body
+   if(!formData){
+    validation+="id is required"
+   }
+   if(!!validation){
+    req.json({
+        status:422,
+        success:false,
+        message:validation
+    })
+   }
+   else{
+    CategoryModel.findOne({_id:formData._id})
+    .then((categoryData)=>{
+        if(!categoryData){
+        res.json({
+            status:404,
+            success:false,
+            message:"category not found"
+        })
+        }
+        else{
+            if(!!formData.name){
+                categoryData.name = formData.name
+            }
+            if(!!formData.description){
+                categoryData.description = formData.description
+            }
+            categoryData.save()
+            .then((categoryData)=>{
+                res.json({
+                    status:200,
+                    success:true,
+                    message:"category updated",
+                    data:categoryData
+                })
+            })
+            .catch((err)=>{
+                res.json({
+                    status:500,
+                    success:false,
+                    message:"Internal Server Error"
+                })
+            })
+        }
+    })
+
+    .catch((err)=>{
+        res.json({
+            status:500,
+            success:false,
+            message:"Internal Server Error"
+        })
+    })
+   }
+}
+
+changeStatus = (req,res)=>{
+    let validation=""
+    let formData = req.body
+    if(!formData._id){
+        validation+="id is required"
+    }
+    if(!!validation.trim()){
+        res.json({
+            status:422,
+            success:false,
+            message:validation
+        })
+    }
+    else{
+        CategoryModel.findOne({_id:formData._id})
+        .then((categoryData)=>{
+            if(!categoryData){
+                res.json({
+                    status:404,
+                    success:false,
+                    message:"category not found"
+                })
+            }
+            else{
+                categoryData.status=!categoryData.status
+                categoryData.save()
+                .then((categoryData)=>{
+                    res.json({
+                        status:200,
+                        success:true,
+                        message:"status updated",
+                        data:categoryData
+                    })
+                })
+                .catch((err)=>{
+                    res.json({
+                        status:500,
+                        success:false,
+                        message:"Internal Server Error",
+                        error:err
+                    })
+                })
+            }
+        })
+        .catch((err)=>{
+            res.json({
+                status:500,
+                success:false,
+                message:"Internal Server Error",
+                error:err
+            })
+        })
+    }
+}
+
+module.exports={add, all, single,deleteCategory, deleteCategoryByParams,updateCategory,changeStatus}

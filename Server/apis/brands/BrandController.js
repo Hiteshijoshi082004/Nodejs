@@ -1,3 +1,4 @@
+const { changeStatus } = require("../categories/CategoryController")
 const BrandModel = require("./BrandModel")
 add= async(req,res)=>{
    let validation = ""
@@ -222,4 +223,116 @@ deleteBrandByParams = (req,res)=>{
     }
 }
 
-module.exports={add, all, single,deleteBrand, deleteBrandByParams}
+updateBrand = (req,res)=>{
+    let validation=""
+    let formData = req.body
+    if(!formData._id){
+        validation+="id is required"
+    }
+    if(!!validation){
+        res.json({
+            status:422,
+            success:false,
+            message:validation
+        })
+    }
+    else{
+        BrandModel.findOne({_id:formData._id})
+        .then((brandData)=>{
+            if(!brandData){
+                res.json({
+                    status:404,
+                    success:false,
+                    message:"brand not found!"
+                })
+            }
+            else{
+                if(!!formData.name){
+                    brandData.name = formData.name
+                }
+                if(!!formData.description){
+                    brandData.description = formData.description
+                }
+                brandData.save()
+                .then((brandData)=>{
+                        res.json({
+                            status:200,
+                            success:true,
+                            message:"brand updated!",
+                            data:brandData
+                        })
+                })
+                .catch((err)=>{
+                    res.json({
+                        status:500,
+                        success:false,
+                        message:"Internal Server Error",
+                        error:err
+                    })
+                })
+            }
+        })
+        .catch((err)=>{
+            res.json({
+                status:500,
+                success:false,
+                message:"Internal Server Error",
+                error:err
+        })
+    })
+    }
+}
+
+ChangeStatus = (req,res)=>{
+    let validation =""
+    let formData = req.body
+    if(!formData._id){
+        validation+="id is required"
+    }
+    if(!!validation.trim()){
+        res.json({
+            status:422,
+            success:false,
+            message:validation
+        })
+    }
+    else{
+        BrandModel.findOne({_id:formData._id})
+        .then((brandData)=>{
+            if(!brandData){
+                res.json({
+                    status:404,
+                    success:false,
+                    message:"brand not found"
+                })
+            }
+            else{
+                brandData.status = !brandData.status
+                brandData.save()
+                .then((brandData)=>{
+                    res.json({
+                        status:200,
+                        success:true,
+                        message:"status updated",
+                        data:brandData
+                    })
+                })
+                .catch((err)=>{
+                    res.json({
+                        status:500,
+                        success:false,
+                        message:"Internal Server Error"
+                    })
+                })
+            }
+        })
+        .catch((err)=>{
+            res.json({
+                status:500,
+                success:false,
+                message:"Internal Server Error"
+            })
+        })
+    }
+}
+module.exports={add, all, single,deleteBrand, deleteBrandByParams,updateBrand,ChangeStatus}

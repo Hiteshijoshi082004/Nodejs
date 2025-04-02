@@ -1,3 +1,4 @@
+const BrandModel = require("../brands/BrandModel")
 const ProductModel = require("./ProductModel")
 add= async(req,res)=>{
     let validation =""
@@ -220,4 +221,120 @@ deleteProductByParams=(req,res)=>{
         })
     }
 }
-module.exports={add, all, single,deleteProduct,deleteProductByParams}
+
+updateProduct = (req,res)=>{
+   let validation =""
+   let formData = req.body
+   if(!formData){
+    validation+="id is required"
+   }
+   if(!!validation){
+    req.json({
+        status:422,
+        success:false,
+        message:validation
+    })
+   }
+   else{
+    ProductModel.findOne({_id:formData._id})
+    .then((productData)=>{
+        if(!productData){
+        res.json({
+            status:404,
+            success:false,
+            message:"product not found"
+        })
+        }
+        else{
+            if(!!formData.name){
+                productData.name = formData.name
+            }
+            if(!!formData.description){
+                productData.description = formData.description
+            }
+            productData.save()
+            .then((productData)=>{
+                res.json({
+                    status:200,
+                    success:true,
+                    message:"product updated",
+                    data:productData
+                })
+            })
+            .catch((err)=>{
+                res.json({
+                    status:500,
+                    success:false,
+                    message:"Internal Server Error"
+                })
+            })
+        }
+    })
+
+    .catch((err)=>{
+        res.json({
+            status:500,
+            success:false,
+            message:"Internal Server Error"
+        })
+    })
+   }
+}
+
+changeStatus = (req,res)=>{
+    let validation=""
+    let formData = req.body
+    if(!formData._id){
+        validation+="id is required"
+    }
+    if(!!validation.trim()){
+        res.json({
+            status:422,
+            success:false,
+            message:validation
+        })
+    }
+    else{
+        ProductModel.findOne({_id:formData._id})
+        .then((productData)=>{
+            if(!productData){
+                res.json({
+                    status:404,
+                    success:false,
+                    message:"product not found"
+                })
+            }
+            else{
+                productData.status=!productData.status
+                productData.save()
+                .then((productData)=>{
+                    res.json({
+                        status:200,
+                        success:true,
+                        message:"status updated",
+                        data:productData
+                    })
+                })
+                .catch((err)=>{
+                    res.json({
+                        status:500,
+                        success:false,
+                        message:"Internal Server Error",
+                        error:err
+                    })
+                })
+            }
+        })
+        .catch((err)=>{
+            res.json({
+                status:500,
+                success:false,
+                message:"Internal Server Error",
+                error:err
+            })
+        })
+    }
+}
+
+
+module.exports={add, all, single,deleteProduct,deleteProductByParams,updateProduct,changeStatus}
