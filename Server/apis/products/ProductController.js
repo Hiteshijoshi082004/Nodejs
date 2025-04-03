@@ -1,46 +1,62 @@
 const BrandModel = require("../brands/BrandModel")
 const ProductModel = require("./ProductModel")
-add= async(req,res)=>{
-    let validation =""
-    let formData = req.body
+add= (req,res)=>{
+    let validation="" 
+    let formData=req.body 
     if(!formData.name){
-     validation+=" Name is required, " 
-    }
+        validation+="Product Name is required"
+    }  
     if(!formData.description){
-     validation+=" description is required"
-    }
+        validation+="Description is required"
+    }  
     if(!!validation){
-     res.json({
-         status:422,
-         success:false,
-         message: validation
-     })
-    }
-    else{
-        console.log(req.body);
-        let ProductObj = new ProductModel();
-        let total = await ProductModel.countDocuments().exec();
-        ProductObj.autoID=total+1;
-        ProductObj.name = req.body.name;
-        ProductObj.description = req.body.description;
-        ProductObj.save()
-        .then((productData)=>{
+        res.json({
+            status:422,
+            success:false,
+            message:validation
+        })
+    }else{
+        ProductModel.findOne({name:formData.name})
+        .then(async (productData)=>{
+            if(!productData){
+                let productObj= new ProductModel()
+                let total=await ProductModel.countDocuments().exec()
+                productObj.autoID=total+1
+                productObj.name=formData.name
+                productObj.description=formData.description 
+                productObj.save()
+                .then((productData)=>{
+                    res.json({
+                        status:200,
+                        success:true,
+                        message:"Product Added!!",
+                        data:productData
+                    })
+                })
+                .catch((err)=>{
+                    res.json({
+                        status:500,
+                        success:false,
+                        message:"internal server error"
+                    })
+                })
+            }else{
+                res.json({
+                    status:200,
+                    success:false,
+                    message:"Data already exist on given name"
+                })
+            }
+        })
+        .catch((err)=>{
             res.json({
-                status:200,
-                success:true,
-                message:"Product Added",
-                data:productData
+                status:500,
+                success:false,
+                message:"Internal server error!!"
             })
-})
-    .catch((err)=>{
-    res.json({
-        status:500,
-        success:false,
-        message:"Internal server error!!",
-        error:err
-    })
-})
-}
+        })
+       
+    }
 }
 
 all=(req,res)=>{
