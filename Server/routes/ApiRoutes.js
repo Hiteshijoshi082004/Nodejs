@@ -3,6 +3,8 @@ const CategoryController= require("../apis/categories/CategoryController")
 const BrandController= require("../apis/brands/BrandController")
 
 const ProductController = require("../apis/products/ProductController")
+
+const UserController = require("../apis/users/UserController")
 // IMPORT EXPRESS PACKAGE
 const express=require("express")
 const router=express.Router()
@@ -31,5 +33,10 @@ router.delete("/products/deleteProductByParams/:_id", ProductController.deletePr
 router.post("/products/updateProduct", ProductController.updateProduct)
 router.post("/products/changeStatus", ProductController.changeStatus)
 
+// USER
+router.post("/users/add", UserController.add)
+router.post("/users/all", UserController.all)
+router.post("/users/updateuser", UserController.updateUser)
+router.post("/users/deleteuser", UserController.deleteUser)
 
 module.exports=router
