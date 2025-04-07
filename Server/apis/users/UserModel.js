@@ -1,14 +1,13 @@
 const mongoose = require("mongoose")
 const UserSchema = mongoose.Schema({
-    autoID:{type:Number, default:1},
-    name:{type:String,default:""},
-    username:{type:String, default:""},
+    autoId:{type:Number, default:1},
+    name:{type:String, default:""},
     email:{type:String, default:""},
-    phone:{type:String, deafult: ""},
-    address:{type:String, default:""},
     password:{type:String, default:""},
-    status:{type:Boolean, default:true},
-    created_At:{type:Date, deafult:Date.now()}
+    userType:{type:Number, default:2},
+    //1->admin, 2->customer, 3-> restro
+   status:{type:Boolean, default:true},
+   createdAt:{type:Date, default:Date.now()}
 })
 
 module.exports = mongoose.model("UserModel", UserSchema);

@@ -8,6 +8,7 @@ const PORT = 5002
 
 // DATABASE CONNECTIVITY
 const db = require("./Server/config/db")
+const seed=require("./Server/config/seed")
 app.use(express.urlencoded({extended:true}))
 app.use(express.json({limit:"40mb"}))
 // CONTROLLER ROUTER CHECK  
