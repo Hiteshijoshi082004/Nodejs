@@ -9,6 +9,9 @@ add= (req,res)=>{
     if(!formData.description){
         validation+="Description is required"
     }  
+    if(!req.file){
+        validation+="Image is required"
+    }
     if(!!validation){
         res.json({
             status:422,
@@ -24,6 +27,7 @@ add= (req,res)=>{
                 productObj.autoID=total+1
                 productObj.name=formData.name
                 productObj.description=formData.description 
+                productObj.image="productimages/"+req.file.filename
                 productObj.save()
                 .then((productData)=>{
                     res.json({

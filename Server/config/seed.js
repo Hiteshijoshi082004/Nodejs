@@ -1,6 +1,5 @@
 const userModel = require("../apis/users/UserModel")
 const bcryptjs = require("bcryptjs")
-userModel
 userModel.findOne({email:"admin@gmail.com"})
 .then((userData)=>{
     if(!userData){

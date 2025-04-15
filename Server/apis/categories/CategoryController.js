@@ -8,6 +8,9 @@ add= (req,res)=>{
     if(!formData.description){
         validation+="Description is required"
     }  
+    if(!req.file){
+        validation+="Image is required"
+    }
     if(!!validation){
         res.json({
             status:422,
@@ -15,6 +18,7 @@ add= (req,res)=>{
             message:validation
         })
     }else{
+        // duplicacy check 
         CategoryModel.findOne({name:formData.name})
         .then(async (categoryData)=>{
             if(!categoryData){
@@ -23,6 +27,7 @@ add= (req,res)=>{
                 categoryObj.autoID=total+1
                 categoryObj.name=formData.name
                 categoryObj.description=formData.description 
+                categoryObj.image="categoryimages/"+req.file.filename
                 categoryObj.save()
                 .then((categoryData)=>{
                     res.json({

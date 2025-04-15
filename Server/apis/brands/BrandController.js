@@ -9,6 +9,9 @@ add= (req,res)=>{
     if(!formData.description){
         validation+="Description is required"
     }  
+    if(!req.file){
+        validation+="Image is required"
+    }
     if(!!validation){
         res.json({
             status:422,
@@ -24,6 +27,7 @@ add= (req,res)=>{
                 brandObj.autoID=total+1
                 brandObj.name=formData.name
                 brandObj.description=formData.description 
+                brandObj.image = "brandimages/"+req.file.filename
                 brandObj.save()
                 .then((brandData)=>{
                     res.json({
