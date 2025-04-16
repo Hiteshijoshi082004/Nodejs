@@ -1,10 +1,10 @@
 const CategoryController= require("../apis/categories/CategoryController")
 const BrandController= require("../apis/brands/BrandController")
 const ProductController = require("../apis/products/ProductController")
+const CustomerController = require("../apis/customers/CustomerController")
+const UserController = require("../apis/users/UserController")
 const multer=require("multer")
-// const CustomerController = require("../apis/customers/CustomerController")
 
- 
 // CATEGORY STORAGE
 const CategoryStorage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -46,7 +46,8 @@ const BrandUpload = multer({ storage: BrandStorage })
 const express=require("express")
 const router=express.Router()
 
-// router.post("/customers/register", CustomerController.register)
+router.post("/customers/register", CustomerController.register)
+router.post("/users/login", UserController.login)
 // CATEGORY 
 router.post("/categories/add" , CategoryUpload.single("image"),CategoryController.add)
 router.post("/categories/all", CategoryController.all)

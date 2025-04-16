@@ -1,9 +1,9 @@
-const userModel = require("../apis/users/UserModel")
+const UserModel = require("../apis/users/UserModel")
 const bcryptjs = require("bcryptjs")
-userModel.findOne({email:"admin@gmail.com"})
+UserModel.findOne({email:"admin@gmail.com"})
 .then((userData)=>{
     if(!userData){
-        let userObj=new userModel()
+        let userObj=new UserModel()
         userObj.name="admin"
         userObj.email="admin@gmail.com"
         userObj.password=bcryptjs.hashSync("123",10)

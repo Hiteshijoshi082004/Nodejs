@@ -12,7 +12,7 @@ const seed=require("./Server/config/seed")
 app.use(express.urlencoded({extended:true}))
 app.use(express.json({limit:"40mb"}))
 // CONTROLLER ROUTER CHECK  
-const api=require("./server/routes/ApiRoutes")
+const api=require("./Server/routes/ApiRoutes")
 app.use("/apis", api)
 app.listen(PORT,()=>{
     console.log("SERVER is running at PORT", PORT);
