@@ -50,7 +50,7 @@ add= (req,res)=>{
                     success:false,
                     message:"Data already exist on given name"
                 })
-            }
+            }   
         })
         .catch((err)=>{
             res.json({
@@ -141,57 +141,56 @@ single=(req,res)=>{
     }    
 }
 
-deleteCategory = (req,res)=>{
-    // console.log(req.body)
-    let validation=""
-    if(!req.body._id){
-        validation+="id is required"
-    }
-    // console.log(validation.length)
-    if(!!validation){
-        res.json({
-            status:422,
-            success:false,
-            message: validation
-        })
-    }
-    else{
+deleteCategory=(req,res)=>{
+   let validation=""
+   if(!req.body._id){
+    validation+="_id is required"
+   }
+   if(!!validation){
+    res.json({
+        status:422,
+        success:false,
+        message:validation
+    })
+   }else{
         CategoryModel.findOne({_id:req.body._id})
         .then((categoryData)=>{
             if(!categoryData){
                 res.json({
                     status:404,
-                    success: false,
-                    message:"data not found"
+                    success:false,
+                    message:"Category not found!!"
                 })
-            }
-            else{
-                categoryData.deleteOne({_id:req.body._id})
-                .then((categoryData)=>{
+            }else{
+                CategoryModel.deleteOne({_id:req.body._id})
+                .then(()=>{
                     res.json({
                         status:200,
                         success:true,
-                        message:"category deleted",
+                        message:"Category deleted!!"
                     })
                 })
                 .catch((err)=>{
                     res.json({
                         status:500,
                         success:false,
-                        message:"Internal Server Error"
+                        message:"Internal server error"
                     })
                 })
             }
+            
         })
         .catch((err)=>{
             res.json({
                 status:500,
                 success:false,
-                message:"Internal Server Error"
+                message:"Internal server error"
             })
         })
-    }
+   }
+    
 }
+
 
 deleteCategoryByParams = (req,res)=>{
     let validation=""
@@ -287,7 +286,8 @@ updateCategory = (req,res)=>{
                 res.json({
                     status:500,
                     success:false,
-                    message:"Internal Server Error"
+                    message:"Internal Server Error",
+                    error:err
                 })
             })
         }
@@ -297,7 +297,8 @@ updateCategory = (req,res)=>{
         res.json({
             status:500,
             success:false,
-            message:"Internal Server Error"
+            message:"Internal Server Error",
+            error:err
         })
     })
    }
@@ -327,6 +328,7 @@ changeStatus = (req,res)=>{
                 })
             }
             else{
+                // categoryData.status =formdata.status
                 categoryData.status=!categoryData.status
                 categoryData.save()
                 .then((categoryData)=>{
